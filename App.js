@@ -2,17 +2,24 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Image, Text } from 'react-native';
 import Button from './components/Button';
 import { useState } from 'react';
-import ScannerPicker from './components/ScannerPicker';
+import DevicePicker from './components/DevicePicker';
 import Select from './components/Select';
 
 const PlaceholderImage = require('./assets/thumbnail.png');
 
 export default function App() {
-  const [showScannerPicker,setShowScannerPicker] = useState(false);
+  const [showDevicePicker,setShowDevicePicker] = useState(false);
+  const [devices,setDevices] = useState(["Camera","Scanner"]);
+  const [selectedDevice,setSelectedDevice] = useState("Camera");
+
   return (
     <View style={styles.container}>
-      {showScannerPicker && (
-        <ScannerPicker></ScannerPicker>
+      {showDevicePicker && (
+        <DevicePicker devices={devices} onPress={(device) => {
+          console.log(device);
+          setSelectedDevice(device);
+          setShowDevicePicker(false);
+        }}></DevicePicker>
       )}
       <View style={styles.imageContainer}>
         <Image source={PlaceholderImage} style={styles.image} />
@@ -20,7 +27,7 @@ export default function App() {
       <View style={styles.footerContainer}>
         <View style={styles.scanner}>
           <Text style={styles.label}>Device:</Text>
-          <Select></Select>
+          <Select label={selectedDevice} onPress={()=>setShowDevicePicker(true)}></Select>
         </View>
         <Button label="Scan" />
       </View>

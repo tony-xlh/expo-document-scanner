@@ -9,7 +9,7 @@ export default function Select({ label, onPress }) {
           style={[styles.button]}
           onPress={onPress}
         >
-          <Text style={[styles.buttonLabel, { color: "#25292e" }]}>{label}</Text>
+          <Text style={[styles.label]}>{label}</Text>
         </Pressable>
     </View>
   );
@@ -21,6 +21,11 @@ const styles = StyleSheet.create({
     borderWidth: 1, 
     borderColor: "white", 
     borderRadius: 10,
-    height: 35,
+    height: 30,
+    justifyContent:"center",
   },
+  label:{
+    marginLeft: 10,
+    color: "white",
+  }
 });
