@@ -56,12 +56,12 @@ export default function App() {
         </View>
         <View style={styles.footerContainer}>
           <View style={styles.option}>
-            <Text style={styles.label}>Device:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text>
-            <Select label={selectedDevice} onPress={()=>setShowDevicePicker(true)}></Select>
+            <Text style={styles.label}>Device:</Text>
+            <Select style={styles.select} label={selectedDevice} onPress={()=>setShowDevicePicker(true)}></Select>
           </View>
           <View style={styles.option}>
             <Text style={styles.label}>Color Mode:</Text>
-            <Select label={selectedColorMode} onPress={()=>setShowColorModePicker(true)}></Select>
+            <Select style={styles.select} label={selectedColorMode} onPress={()=>setShowColorModePicker(true)}></Select>
           </View>
           <Button label="Scan" onPress={()=>setShowScanner(true)} />
         </View>
@@ -99,8 +99,12 @@ const styles = StyleSheet.create({
     height: 40,
   },
   label:{
+    flex: 3 / 7,
     color: 'white', 
     marginRight: 10,
+  },
+  select:{
+    flex: 1,
   },
   imageContainer: {
     flex: 1,
