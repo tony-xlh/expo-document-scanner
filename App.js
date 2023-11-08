@@ -1,15 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Image, Text } from 'react-native';
 import Button from './components/Button';
-import { useState,useEffect } from 'react';
+import { useState,useEffect, useRef } from 'react';
 import ItemsPicker from './components/ItemsPicker';
 import Select from './components/Select';
 import DocumentScanner from './components/DocumentScanner';
 import { SafeAreaView, SafeAreaProvider  } from 'react-native-safe-area-context';
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
 
 const PlaceholderImage = require('./assets/thumbnail.png');
 
+
 export default function App() {
+  const path = useRef("");
   const [showDevicePicker,setShowDevicePicker] = useState(false);
   const [showColorModePicker,setShowColorModePicker] = useState(false);
   const [showScanner,setShowScanner] = useState(false);
@@ -21,9 +25,24 @@ export default function App() {
     
   }, []);
 
-  const onScanned = (dataURL) => {
+  const onScanned = async (dataURL) => {
+    const timestamp = new Date().getTime();
+    path.value = FileSystem.documentDirectory + timestamp + ".png";
+    const base64Code = dataURL.split("data:image/png;base64,")[1];
+    await FileSystem.writeAsStringAsync(path.value, base64Code, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    setImage({uri: path.value});
     setShowScanner(false);
-    setImage({uri: dataURL});
+  }
+
+  const scan = () => {
+    setShowScanner(true);
+  }
+
+  const share = async () => {
+    console.log(path.value)
+    Sharing.shareAsync(path.value);
   }
 
   const renderBody = () => {
@@ -63,7 +82,8 @@ export default function App() {
             <Text style={styles.label}>Color Mode:</Text>
             <Select style={styles.select} label={selectedColorMode} onPress={()=>setShowColorModePicker(true)}></Select>
           </View>
-          <Button label="Scan" onPress={()=>setShowScanner(true)} />
+          <Button label="Scan" onPress={()=>scan()} />
+          <Button style={styles.button} label="Share" onPress={()=>share()} />
         </View>
       </View>
     )
@@ -82,6 +102,9 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  button:{
+    marginBottom: 5,
   },
   home: {
     flex: 1,
@@ -109,10 +132,11 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     paddingTop: 20,
+    alignItems:"center",
   },
   image: {
     width: 320,
-    height: 320,
+    height: "95%",
     borderRadius: 18,
     resizeMode: "contain",
   },
