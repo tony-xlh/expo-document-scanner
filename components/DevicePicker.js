@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     alignItems: 'flex-start',
+    backgroundColor: 'black',
   },
   item: {
     color: "white",

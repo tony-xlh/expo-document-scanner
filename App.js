@@ -20,7 +20,8 @@ export default function App() {
   }, []);
 
   const onScanned = (dataURL) => {
-    setImage(dataURL);
+    setShowScanner(false);
+    setImage({uri: dataURL});
   }
 
   const renderBody = () => {
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerContainer: {
-    flex: 1 / 3,
+    flex: 3 / 5,
   },
   scanner:{
     flexDirection:"row",
@@ -89,11 +90,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    paddingTop: 58,
+    paddingTop: 20,
   },
   image: {
     width: 320,
-    height: 440,
+    height: 320,
     borderRadius: 18,
     resizeMode: "contain",
   },

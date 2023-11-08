@@ -18,7 +18,7 @@ export default function DocumentScanner(props) {
         allowsInlineMediaPlayback={true}
         mediaPlaybackRequiresUserAction={false}
         onMessage={(event) => {
-          //console.log(event);
+          console.log(event);
           if (!event.nativeEvent.data) {
             if (props.onClosed) {
               props.onClosed();
