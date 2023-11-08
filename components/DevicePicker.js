@@ -15,7 +15,7 @@ export default function DevicePicker({ devices,onPress }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 40,
+    paddingTop: 20,
     paddingLeft: 20,
     width: "100%",
     height: "100%",
