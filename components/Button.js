@@ -17,9 +17,9 @@ export default function Button({ label, onPress }) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: 300,
+    width: "auto",
+    marginHorizontal: 10,
     height: 40,
-    marginHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 3,

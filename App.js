@@ -119,8 +119,17 @@ export default function App() {
             <Text style={styles.label}>Color Mode:</Text>
             <Select style={styles.select} label={selectedColorMode} onPress={()=>setShowColorModePicker(true)}></Select>
           </View>
-          <Button label="Scan" onPress={()=>scan()} />
-          <Button style={styles.button} label="Share" onPress={()=>share()} />
+          <View style={styles.buttons}>
+            <View style={styles.buttonContainer}>
+              <Button label="Scan" onPress={()=>scan()} />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button style={styles.button} label="Share" onPress={()=>share()} />
+            </View>
+          </View>
+          <View>
+            <Button style={styles.button} label="History" onPress={()=>share()} />
+          </View>
         </View>
       </View>
     )
@@ -143,6 +152,12 @@ const styles = StyleSheet.create({
   button:{
     marginBottom: 5,
   },
+  buttons: {
+    flexDirection:"row",
+  },
+  buttonContainer:{
+    width:"50%",
+  },
   home: {
     flex: 1,
     width: "100%",
@@ -151,6 +166,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     flex: 3 / 5,
+    width: "100%",
   },
   option:{
     flexDirection:"row",
