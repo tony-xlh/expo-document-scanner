@@ -1,13 +1,17 @@
-import { StyleSheet, View, Text, FlatList, Image,Button } from 'react-native';
-import { useEffect,useState } from 'react';
+import { StyleSheet, View, Text, FlatList, Image,Button,Pressable,Dimensions } from 'react-native';
+import { useEffect,useState,useRef } from 'react';
+import ItemsPicker from './ItemsPicker';
+import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
-import { Dimensions } from 'react-native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+const actions = ["Delete","Share"];
 
 export default function HistoryBrowser(props) {
   const [images,setImages] = useState([]);
+  const [showActionPicker,setShowActionPicker] = useState(false);
+  const pressedImageName = useRef("");
   useEffect(() => {
     console.log(width);
     console.log(height);
@@ -23,13 +27,11 @@ export default function HistoryBrowser(props) {
         newImages.push(file);
       }
     }
-    console.log(newImages);
     setImages(newImages);
   }
 
   const getURI = (filename) => {
     const uri = FileSystem.documentDirectory + filename;
-    console.log(uri);
     return uri;
   }
 
@@ -39,8 +41,38 @@ export default function HistoryBrowser(props) {
     }
   }
 
+  const deleteFile = async () => {
+    if (pressedImageName.current != "") {
+      setImages([]);
+      const path = FileSystem.documentDirectory + pressedImageName.current;
+      await FileSystem.deleteAsync(path);
+      pressedImageName.current = "";
+      readImagesList();
+    }
+  }
+
+  const share = () => {
+    if (pressedImageName.current != "") {
+      const path = FileSystem.documentDirectory + pressedImageName.current;
+      Sharing.shareAsync(path);
+    }
+  }
+
+  if (showActionPicker) {
+    return (
+      <ItemsPicker items={actions} onPress={(action) => {
+        console.log(action);
+        setShowActionPicker(false);
+        if (action === "Delete") {
+          deleteFile();
+        }else{
+          share();
+        }
+      }}></ItemsPicker>
+    )
+  }
+
   return (
-    
     <View style={styles.container}>
       <View style={styles.backButtonContainer} >
         <Button title="< Back" onPress={goBack}></Button>  
@@ -49,9 +81,15 @@ export default function HistoryBrowser(props) {
         horizontal={true}
         style={styles.flat}
         data={images}
-        renderItem={({item}) => <Image style={styles.image} source={{
-          uri: getURI(item),
-        }}/>}
+        renderItem={({item}) => 
+          <Pressable onPress={()=>{
+            pressedImageName.current = item;
+            setShowActionPicker(true);
+          }}>
+            <Image style={styles.image} source={{
+              uri: getURI(item),
+            }}/>
+          </Pressable>}
       />
       
     </View>

@@ -28,15 +28,15 @@ export default function App() {
   const [selectedColorMode,setSelectedColorMode] = useState("Color");
   const [image,setImage] = useState(PlaceholderImage);
   useEffect(() => {
-    service.value = new DynamsoftService("http://192.168.8.65:18622","t0196AgYAAEfllzdl2BHsMwY6jmomdcI78bkOy2qg8djI/bR/16WoyO8qBYMafK1pxFp2czGwZQYmzkFrLn7QGWIwAUFh52R5uO7ZPc600karTbSKJlq20cpVLRCn21f5/u4/Nc+RDLwnQJcNsgCsgVLOBhj6uTxagFiAGoBaNdACDleR+u/qBgq2kanfGv3HqVMaOPV+Z52Ue5xs4JRLzhQQn0LxSasdC8B656wAsQA9BDj/1HYBwRYQC9AdEKMKfXRfpBk0PA==");
+    service.current = new DynamsoftService("http://192.168.8.65:18622","t0196AgYAAEfllzdl2BHsMwY6jmomdcI78bkOy2qg8djI/bR/16WoyO8qBYMafK1pxFp2czGwZQYmzkFrLn7QGWIwAUFh52R5uO7ZPc600karTbSKJlq20cpVLRCn21f5/u4/Nc+RDLwnQJcNsgCsgVLOBhj6uTxagFiAGoBaNdACDleR+u/qBgq2kanfGv3HqVMaOPV+Z52Ue5xs4JRLzhQQn0LxSasdC8B656wAsQA9BDj/1HYBwRYQC9AdEKMKfXRfpBk0PA==");
     fetchDevicesList();
   }, []);
 
   const fetchDevicesList = async () =>{
-    scanners.value = await service.value.getDevices();
+    scanners.current = await service.current.getDevices();
     let newDevices = ["Camera"];
-    for (let index = 0; index < scanners.value.length; index++) {
-      const scanner = scanners.value[index];
+    for (let index = 0; index < scanners.current.length; index++) {
+      const scanner = scanners.current[index];
       newDevices.push(scanner.name);
     }
     setDevices(newDevices);
@@ -44,12 +44,12 @@ export default function App() {
 
   const onScanned = async (dataURL) => {
     const timestamp = new Date().getTime();
-    path.value = FileSystem.documentDirectory + timestamp + ".png";
+    path.current = FileSystem.documentDirectory + timestamp + ".png";
     const base64Code = removeDataURLHead(dataURL);
-    await FileSystem.writeAsStringAsync(path.value, base64Code, {
+    await FileSystem.writeAsStringAsync(path.current, base64Code, {
       encoding: FileSystem.EncodingType.Base64,
     });
-    setImage({uri: path.value});
+    setImage({uri: path.current});
     setShowScanner(false);
   }
 
@@ -58,9 +58,9 @@ export default function App() {
       setShowScanner(true);
     }else{
       setModalVisible(true);
-      const selectedScanner = scanners.value[selectedDeviceIndex - 1];
+      const selectedScanner = scanners.current[selectedDeviceIndex - 1];
       const pixelType = colorModes.indexOf(selectedColorMode);
-      const image = await service.value.acquireImage(selectedScanner.device,pixelType);
+      const image = await service.current.acquireImage(selectedScanner.device,pixelType);
       onScanned(image);
       setModalVisible(false);
     }
@@ -71,7 +71,7 @@ export default function App() {
   }
 
   const share = async () => {
-    Sharing.shareAsync(path.value);
+    Sharing.shareAsync(path.current);
   }
 
   const renderBody = () => {
