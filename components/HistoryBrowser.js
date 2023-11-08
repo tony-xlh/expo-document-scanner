@@ -71,24 +71,24 @@ export default function HistoryBrowser(props) {
     
   }
 
-  if (showActionPicker) {
-    return (
-      <ItemsPicker items={actions} onPress={(action) => {
-        console.log(action);
-        setShowActionPicker(false);
-        if (action === "Delete") {
-          deleteFile();
-        }else if (action === "Share"){
-          share();
-        }else if (action === "Get info"){
-          getInfo();
-        }
-      }}></ItemsPicker>
-    )
-  }
-
   return (
     <View style={styles.container}>
+      {showActionPicker && (
+        <View style={styles.pickerContainer}>
+          <ItemsPicker items={actions} onPress={(action) => {
+            console.log(action);
+            setShowActionPicker(false);
+            if (action === "Delete") {
+              deleteFile();
+            }else if (action === "Share"){
+              share();
+            }else if (action === "Get info"){
+              getInfo();
+            }
+          }}></ItemsPicker>
+        </View>
+      )
+      }
       <View style={styles.backButtonContainer} >
         <Button title="< Back" onPress={goBack}></Button>  
       </View>
@@ -106,10 +106,7 @@ export default function HistoryBrowser(props) {
             }}/>
           </Pressable>}
       />
-      
     </View>
-      
-    
   )
 }
 
@@ -123,6 +120,14 @@ const styles = StyleSheet.create({
     width: width*0.9,
     height: height*0.9,
     resizeMode: "contain",
+  },
+  pickerContainer:{
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    zIndex: 20,
   },
   backButtonContainer:{
     position:"absolute",
