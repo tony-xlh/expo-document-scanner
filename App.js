@@ -71,7 +71,9 @@ export default function App() {
   }
 
   const share = async () => {
-    Sharing.shareAsync(path.current);
+    if (path.current) {
+      Sharing.shareAsync(path.current);
+    }
   }
 
   const renderBody = () => {
@@ -135,7 +137,11 @@ export default function App() {
             </View>
           </View>
           <View>
-            <Button style={styles.button} label="History" onPress={()=>setShowHistoryBrowser(true)} />
+            <Button style={styles.button} label="History" onPress={()=>{
+              path.current = "";
+              setImage(PlaceholderImage); //display the place holder image in case the scanned image is deleted
+              setShowHistoryBrowser(true)
+            }} />
           </View>
         </View>
       </View>
