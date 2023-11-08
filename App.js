@@ -5,6 +5,7 @@ import { useState,useEffect, useRef } from 'react';
 import ItemsPicker from './components/ItemsPicker';
 import Select from './components/Select';
 import DocumentScanner from './components/DocumentScanner';
+import HistoryBrowser from './components/HistoryBrowser';
 import { SafeAreaView, SafeAreaProvider  } from 'react-native-safe-area-context';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
@@ -19,6 +20,7 @@ export default function App() {
   const path = useRef("");
   const [showDevicePicker,setShowDevicePicker] = useState(false);
   const [showColorModePicker,setShowColorModePicker] = useState(false);
+  const [showHistoryBrowser,setShowHistoryBrowser] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [showScanner,setShowScanner] = useState(false);
   const [devices,setDevices] = useState(["Camera"]);
@@ -73,6 +75,11 @@ export default function App() {
   }
 
   const renderBody = () => {
+    if (showHistoryBrowser) {
+      return (
+        <HistoryBrowser onBack={()=>setShowHistoryBrowser(false)}></HistoryBrowser>
+      )
+    }
     if (showDevicePicker) {
       return (
         <ItemsPicker items={devices} onPress={(device,idx) => {
@@ -128,7 +135,7 @@ export default function App() {
             </View>
           </View>
           <View>
-            <Button style={styles.button} label="History" onPress={()=>share()} />
+            <Button style={styles.button} label="History" onPress={()=>setShowHistoryBrowser(true)} />
           </View>
         </View>
       </View>
