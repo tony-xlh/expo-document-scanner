@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, FlatList, Image,Button,Pressable,Dimensions } from 'react-native';
+import { Alert, StyleSheet, View, Text, FlatList, Image,Button,Pressable,Dimensions } from 'react-native';
 import { useEffect,useState,useRef } from 'react';
 import ItemsPicker from './ItemsPicker';
 import * as Sharing from 'expo-sharing';
@@ -6,7 +6,7 @@ import * as FileSystem from 'expo-file-system';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const actions = ["Delete","Share"];
+const actions = ["Delete","Share","Get info","Cancel"];
 
 export default function HistoryBrowser(props) {
   const [images,setImages] = useState([]);
@@ -58,6 +58,19 @@ export default function HistoryBrowser(props) {
     }
   }
 
+  const getInfo = async () => {
+    if (pressedImageName.current != "") {
+      const path = FileSystem.documentDirectory + pressedImageName.current;
+      const info = await FileSystem.getInfoAsync(path);
+      const time = new Date(info.modificationTime*1000);
+      let message = "Time: " + time.toUTCString() + "\n";
+      message = message + "Size: " + info.size/1000 + "KB";
+      Alert.alert(pressedImageName.current,message);
+
+    }
+    
+  }
+
   if (showActionPicker) {
     return (
       <ItemsPicker items={actions} onPress={(action) => {
@@ -65,8 +78,10 @@ export default function HistoryBrowser(props) {
         setShowActionPicker(false);
         if (action === "Delete") {
           deleteFile();
-        }else{
+        }else if (action === "Share"){
           share();
+        }else if (action === "Get info"){
+          getInfo();
         }
       }}></ItemsPicker>
     )
