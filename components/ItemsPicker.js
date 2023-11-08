@@ -15,10 +15,9 @@ export default function ItemsPicker({ items,onPress }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
     paddingTop: 20,
     paddingLeft: 20,
-    width: "100%",
-    height: "100%",
     alignItems: 'flex-start',
     backgroundColor: 'black',
   },
