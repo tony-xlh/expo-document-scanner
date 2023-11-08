@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image, Text, Modal } from 'react-native';
 import Button from './components/Button';
 import { useState,useEffect, useRef } from 'react';
 import ItemsPicker from './components/ItemsPicker';
@@ -19,6 +19,7 @@ export default function App() {
   const path = useRef("");
   const [showDevicePicker,setShowDevicePicker] = useState(false);
   const [showColorModePicker,setShowColorModePicker] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [showScanner,setShowScanner] = useState(false);
   const [devices,setDevices] = useState(["Camera"]);
   const [selectedDeviceIndex,setSelectedDeviceIndex] = useState(0);
@@ -54,10 +55,12 @@ export default function App() {
     if (selectedDeviceIndex == 0) {
       setShowScanner(true);
     }else{
+      setModalVisible(true);
       const selectedScanner = scanners.value[selectedDeviceIndex - 1];
       const pixelType = colorModes.indexOf(selectedColorMode);
       const image = await service.value.acquireImage(selectedScanner.device,pixelType);
       onScanned(image);
+      setModalVisible(false);
     }
   }
 
@@ -66,7 +69,6 @@ export default function App() {
   }
 
   const share = async () => {
-    console.log(path.value)
     Sharing.shareAsync(path.value);
   }
 
@@ -95,6 +97,16 @@ export default function App() {
     }
     return (
       <View style={styles.home}>
+        <Modal
+          transparent={true}
+          visible={modalVisible}
+          >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text>Scanning...</Text>
+            </View>
+          </View>
+        </Modal>
         <View style={styles.imageContainer}>
           <Image source={image} style={styles.image} />
         </View>
@@ -164,5 +176,26 @@ const styles = StyleSheet.create({
     height: "95%",
     borderRadius: 18,
     resizeMode: "contain",
+  },
+  centeredView: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    top: "30%",
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
