@@ -5,6 +5,17 @@ import { WebView } from 'react-native-webview';
 
 export default function DocumentScanner(props) {
   const [hasPermission, setHasPermission] = useState(null);
+  const getURI = () => {
+    let URI = 'https://tony-xlh.github.io/Vanilla-JS-Document-Scanner-Demos/react-native/?autoStart=true';
+    if (props.colorMode == "Black&White") {
+      URI = URI + "&colorMode="+0;
+    }else if (props.colorMode == "Gray"){
+      URI = URI + "&colorMode="+1;
+    }else{
+      URI = URI + "&colorMode="+2;
+    }
+    return URI;
+  }
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -30,7 +41,7 @@ export default function DocumentScanner(props) {
             }
           }
         }}
-        source={{ uri: 'https://tony-xlh.github.io/Vanilla-JS-Document-Scanner-Demos/react-native/' }}
+        source={{ uri: getURI() }}
       />
     );
   }else{

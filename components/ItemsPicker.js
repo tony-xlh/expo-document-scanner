@@ -1,12 +1,12 @@
 import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
 
-export default function DevicePicker({ devices,onPress }) {
+export default function ItemsPicker({ items,onPress }) {
   return (
     <View style={styles.container}>
-      <Text style={{color: "white"}}>Select a device:</Text>
-      {devices.map((device, idx) => (
-        <Pressable key={idx} onPress={()=>onPress(device)}>
-          <Text style={styles.item}>{device}</Text>
+      <Text style={{color: "white"}}>Select an item:</Text>
+      {items.map((item, idx) => (
+        <Pressable key={idx} onPress={()=>onPress(item)}>
+          <Text style={styles.item}>{item}</Text>
         </Pressable>
       ))}
     </View>
