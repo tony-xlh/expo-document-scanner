@@ -5,7 +5,7 @@ export default function ItemsPicker({ items,onPress }) {
     <View style={styles.container}>
       <Text style={{color: "white"}}>Select an item:</Text>
       {items.map((item, idx) => (
-        <Pressable key={idx} onPress={()=>onPress(item)}>
+        <Pressable key={idx} onPress={()=>onPress(item,idx)}>
           <Text style={styles.item}>{item}</Text>
         </Pressable>
       ))}

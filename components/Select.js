@@ -9,7 +9,7 @@ export default function Select({ label, onPress }) {
           style={[styles.button]}
           onPress={onPress}
         >
-          <Text style={[styles.label]}>{label}</Text>
+          <Text ellipsizeMode="tail" numberOfLines={1} style={[styles.label]}>{label}</Text>
         </Pressable>
     </View>
   );

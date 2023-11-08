@@ -8,27 +8,41 @@ import DocumentScanner from './components/DocumentScanner';
 import { SafeAreaView, SafeAreaProvider  } from 'react-native-safe-area-context';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
+import { DynamsoftService } from './DynamsoftService.js';
 
 const PlaceholderImage = require('./assets/thumbnail.png');
-
+const colorModes = ["Black&White","Gray","Color"];
 
 export default function App() {
+  const service = useRef();
+  const scanners = useRef();
   const path = useRef("");
   const [showDevicePicker,setShowDevicePicker] = useState(false);
   const [showColorModePicker,setShowColorModePicker] = useState(false);
   const [showScanner,setShowScanner] = useState(false);
   const [devices,setDevices] = useState(["Camera"]);
-  const [selectedDevice,setSelectedDevice] = useState("Camera");
+  const [selectedDeviceIndex,setSelectedDeviceIndex] = useState(0);
   const [selectedColorMode,setSelectedColorMode] = useState("Color");
   const [image,setImage] = useState(PlaceholderImage);
   useEffect(() => {
-    
+    service.value = new DynamsoftService("http://192.168.8.65:18622","t0196AgYAAEfllzdl2BHsMwY6jmomdcI78bkOy2qg8djI/bR/16WoyO8qBYMafK1pxFp2czGwZQYmzkFrLn7QGWIwAUFh52R5uO7ZPc600karTbSKJlq20cpVLRCn21f5/u4/Nc+RDLwnQJcNsgCsgVLOBhj6uTxagFiAGoBaNdACDleR+u/qBgq2kanfGv3HqVMaOPV+Z52Ue5xs4JRLzhQQn0LxSasdC8B656wAsQA9BDj/1HYBwRYQC9AdEKMKfXRfpBk0PA==");
+    fetchDevicesList();
   }, []);
+
+  const fetchDevicesList = async () =>{
+    scanners.value = await service.value.getDevices();
+    let newDevices = ["Camera"];
+    for (let index = 0; index < scanners.value.length; index++) {
+      const scanner = scanners.value[index];
+      newDevices.push(scanner.name);
+    }
+    setDevices(newDevices);
+  }
 
   const onScanned = async (dataURL) => {
     const timestamp = new Date().getTime();
     path.value = FileSystem.documentDirectory + timestamp + ".png";
-    const base64Code = dataURL.split("data:image/png;base64,")[1];
+    const base64Code = removeDataURLHead(dataURL);
     await FileSystem.writeAsStringAsync(path.value, base64Code, {
       encoding: FileSystem.EncodingType.Base64,
     });
@@ -36,8 +50,19 @@ export default function App() {
     setShowScanner(false);
   }
 
-  const scan = () => {
-    setShowScanner(true);
+  const scan = async () => {
+    if (selectedDeviceIndex == 0) {
+      setShowScanner(true);
+    }else{
+      const selectedScanner = scanners.value[selectedDeviceIndex - 1];
+      const pixelType = colorModes.indexOf(selectedColorMode);
+      const image = await service.value.acquireImage(selectedScanner.device,pixelType);
+      onScanned(image);
+    }
+  }
+
+  const removeDataURLHead = (dataURL) => {
+    return dataURL.substring(dataURL.indexOf(",")+1,dataURL.length);
   }
 
   const share = async () => {
@@ -48,16 +73,16 @@ export default function App() {
   const renderBody = () => {
     if (showDevicePicker) {
       return (
-        <ItemsPicker items={devices} onPress={(device) => {
+        <ItemsPicker items={devices} onPress={(device,idx) => {
           console.log(device);
-          setSelectedDevice(device);
+          setSelectedDeviceIndex(idx);
           setShowDevicePicker(false);
         }}></ItemsPicker>
       )
     }
     if (showColorModePicker) {
       return (
-        <ItemsPicker items={["Black&White","Gray","Color"]} onPress={(mode) => {
+        <ItemsPicker items={colorModes} onPress={(mode) => {
           setSelectedColorMode(mode);
           setShowColorModePicker(false);
         }}></ItemsPicker>
@@ -76,7 +101,7 @@ export default function App() {
         <View style={styles.footerContainer}>
           <View style={styles.option}>
             <Text style={styles.label}>Device:</Text>
-            <Select style={styles.select} label={selectedDevice} onPress={()=>setShowDevicePicker(true)}></Select>
+            <Select style={styles.select} label={devices[selectedDeviceIndex]} onPress={()=>setShowDevicePicker(true)}></Select>
           </View>
           <View style={styles.option}>
             <Text style={styles.label}>Color Mode:</Text>
