@@ -10,4 +10,6 @@ Demo video:
 
 https://github.com/tony-xlh/expo-document-scanner/assets/5462205/ff0c15f2-db86-4bd2-97b1-12645739e111
 
+In the demo video, it first opens the camera and scans the document in react-native-webview. Then, it scans a document image from a scanner. After scanning, it opens the history browser and selects an image for sharing.
+
 The demo can run in Expo's managed mode.
