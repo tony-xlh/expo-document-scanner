@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 
 export default function ItemsPicker({ items,onPress }) {
   return (

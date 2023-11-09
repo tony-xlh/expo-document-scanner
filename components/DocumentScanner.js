@@ -14,6 +14,9 @@ export default function DocumentScanner(props) {
     }else{
       URI = URI + "&colorMode="+2;
     }
+    if (props.license) {
+      URI = URI + "&license="+props.license;
+    }
     return URI;
   }
   useEffect(() => {
