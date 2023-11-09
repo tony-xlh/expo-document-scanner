@@ -101,7 +101,11 @@ export default function App() {
     }
     if (showScanner) {
       return (
-        <DocumentScanner colorMode={selectedColorMode} onScanned={(dataURL)=>onScanned(dataURL)}></DocumentScanner>
+        <DocumentScanner 
+          license="DLS2eyJoYW5kc2hha2VDb2RlIjoiMTAwMjI3NzYzLVRYbFhaV0pRY205cSIsIm1haW5TZXJ2ZXJVUkwiOiJodHRwczovL21sdHMuZHluYW1zb2Z0LmNvbSIsIm9yZ2FuaXphdGlvbklEIjoiMTAwMjI3NzYzIiwic3RhbmRieVNlcnZlclVSTCI6Imh0dHBzOi8vc2x0cy5keW5hbXNvZnQuY29tIiwiY2hlY2tDb2RlIjotMzg1NjA5MTcyfQ=="
+          colorMode={selectedColorMode} 
+          onScanned={(dataURL)=>onScanned(dataURL)}
+        ></DocumentScanner>
       )
     }
     return (
@@ -205,6 +209,7 @@ const styles = StyleSheet.create({
     height: "95%",
     borderRadius: 18,
     resizeMode: "contain",
+    overlayColor:"#25292e"
   },
   centeredView: {
     flex: 1,
